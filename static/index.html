@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Student Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .login-section, .chat-section {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .response {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 0.95em;
+        }
+        
+        .error {
+            border-left-color: #e74c3c;
+            background: #fadbd8;
+            color: #c0392b;
+        }
+        
+        .success {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+            color: #1e8449;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .button-group button {
+            flex: 1;
+        }
+        
+        .button-group .logout-btn {
+            background: #e74c3c;
+        }
+        
+        .info-box {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            color: #555;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        
+        chart-image {
+            max-width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <div id="loginSection" class="login-section">
+            <h1>🎓 Student Attendance System</h1>
+            
+            <div class="form-group">
+                <label>Roll Number / Admin ID</label>
+                <input type="number" id="rollNo" placeholder="Enter roll number or 2005 for admin">
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            
+            <button onclick="login()">Login</button>
+            
+            <div id="loginResponse"></div>
+            
+            <div class="info-box" style="margin-top: 30px;">
+                <strong>Demo Credentials:</strong><br>
+                <strong>Admin:</strong> ID: 2005 | Password: Ritesh@2005<br>
+                <strong>Student:</strong> Check your roll number in data
+            </div>
+        </div>
+        
+        <!-- Chat Section (Hidden by default) -->
+        <div id="chatSection" class="chat-section hidden">
+            <h1>Welcome! 👋</h1>
+            <p id="userGreeting" style="text-align: center; color: #667eea; font-weight: 600; margin-bottom: 20px;"></p>
+            
+            <div class="form-group">
+                <label>Ask a Question</label>
+                <textarea id="query" placeholder="e.g., 'details', 'attendance percentage', 'present dates'" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Select Subject</label>
+                <select id="subject">
+                    <option>All</option>
+                    <option>NLP</option>
+                    <option>IOT</option>
+                    <option>SE</option>
+                    <option>ML</option>
+                    <option>ELECTIVE</option>
+                    <option>OE</option>
+                </select>
+            </div>
+            
+            <button onclick="submitQuery()">Get Info</button>
+            
+            <div id="queryResponse"></div>
+            
+            <div class="button-group">
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        let isAdmin = false;
+        
+        async function login() {
+            const rollNo = parseInt(document.getElementById('rollNo').value);
+            const password = document.getElementById('password').value;
+            
+            if (!rollNo || !password) {
+                showResponse('loginResponse', 'Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ roll_no: rollNo, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = rollNo;
+                    isAdmin = data.type === 'admin';
+                    
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('chatSection').classList.remove('hidden');
+                    document.getElementById('userGreeting').textContent = 
+                        data.type === 'admin' ? 'Admin Panel' : `Welcome, ${data.name}!`;
+                } else {
+                    showResponse('loginResponse', data.message, 'error');
+                }
+            } catch (error) {
+                showResponse('loginResponse', 'Login error: ' + error.message, 'error');
+            }
+        }
+        
+        async function submitQuery() {
+            const query = document.getElementById('query').value;
+            const subject = document.getElementById('subject').value;
+            
+            if (!query) {
+                showResponse('queryResponse', 'Please enter a question', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        query, 
+                        subject, 
+                        roll_no: currentUser,
+                        is_admin: isAdmin 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                let resultText = '';
+                if (data.details) resultText += `\n📋 Details:\n${data.details}\n`;
+                if (data.percentage) resultText += `\n📊 ${data.percentage}\n`;
+                if (data.present_dates) resultText += `\n${data.present_dates}\n`;
+                if (data.absent_dates) resultText += `\n${data.absent_dates}\n`;
+                if (data.present_count) resultText += `\nPresent: ${data.present_count} | Absent: ${data.absent_count}`;
+                
+                if (data.chart) {
+                    resultText += '\n\n📊 Chart generated';
+                    showResponse('queryResponse', resultText, 'success');
+                    document.getElementById('queryResponse').innerHTML += 
+                        `<img src="${data.chart}" style="max-width: 100%; margin-top: 15px; border-radius: 8px;">`;
+                } else {
+                    showResponse('queryResponse', resultText, 'success');
+                }
+            } catch (error) {
+                showResponse('queryResponse', 'Error: ' + error.message, 'error');
+            }
+        }
+        
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            document.getElementById('chatSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginResponse').innerHTML = '';
+            document.getElementById('queryResponse').innerHTML = '';
+            document.getElementById('query').value = '';
+            document.getElementById('rollNo').value = '';
+            document.getElementById('password').value = '';
+        }
+        
+        function showResponse(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.className = `response ${type}`;
+            element.textContent = message;
+        }
+        
+        // Allow Enter key
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                if (document.getElementById('loginSection').classList.contains('hidden')) {
+                    submitQuery();
+                } else {
+                    login();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
