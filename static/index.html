@@ -456,11 +456,6 @@
                     </select>
                 </div>
 
-                <div class="search-bar">
-                    <input type="text" id="query" placeholder="Ask a Question... (e.g. details, percentage, present dates)">
-                    <i class="fas fa-chevron-down" onclick="submitQuery()"></i>
-                </div>
-                
                 <div class="controls-row">
                     <div class="subject-select">
                         Select Subject: 
@@ -590,7 +585,6 @@
         async function submitQuery() {
             if (!currentUser && !isAdmin) return;
             
-            const query = document.getElementById('query').value || "details and attendance";
             const subject = document.getElementById('subject').value;
             let targetRoll = currentUser;
             
@@ -604,11 +598,8 @@
             }
             
             try {
-                // Determine implicit query if input is empty but we want full dashboard
-                let actualQuery = query;
-                if(actualQuery.trim() === "") {
-                    actualQuery = "detail percentage present absent";
-                }
+                // Use a hardcoded query to fetch all details and chart
+                let actualQuery = "detail percentage present absent chart";
 
                 const response = await fetch('/api/query', {
                     method: 'POST',
@@ -697,16 +688,13 @@
             document.getElementById('absentDatesOut').innerHTML = '<i class="fas fa-times-circle" style="color: #e74c3c;"></i> No data';
             document.getElementById('chartArea').innerHTML = '<div style="color: #999; font-style: italic;">Chart will appear here</div>';
             document.getElementById('adminControls').style.display = 'none';
-            document.getElementById('query').value = '';
         }
 
-        // Allow Enter key
+        // Allow Enter key for login
         document.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (!currentUser) {
                     login();
-                } else if(document.activeElement === document.getElementById('query')) {
-                    submitQuery();
                 }
             }
         });
