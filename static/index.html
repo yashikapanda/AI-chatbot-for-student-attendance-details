@@ -4,259 +4,532 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎓 Student Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background-image: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #1a5bb0, #2c82d8, #1a5bb0);
+            color: white;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            border-bottom: 4px solid #104184;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .header i {
+            margin-right: 15px;
+            color: #f1c40f;
+            text-shadow: none;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
             padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
             width: 100%;
-            max-width: 600px;
-            padding: 40px;
+            height: calc(100vh - 120px);
         }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        /* Left Panel - Login */
+        .login-panel {
+            background: linear-gradient(180deg, #1f64c1, #2575da);
+            width: 320px;
+            border-radius: 12px;
+            padding: 20px;
             color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: 2px solid #3c8ce3;
+            position: relative;
+        }
+
+        .login-header {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .login-header::before {
+            content: '';
+            width: 20px;
+            height: 3px;
+            background: white;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #e0eaff;
+        }
+
+        .input-group label i {
+            margin-right: 8px;
+        }
+
+        .input-field {
+            display: flex;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        
+        .input-field:focus-within {
+            border-color: #f1c40f;
+            box-shadow: 0 0 8px rgba(241, 196, 15, 0.5);
+        }
+
+        .input-field input {
             border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
+            padding: 10px;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .input-field .icon-container {
+            background: #e8f0fe;
+            padding: 10px;
+            color: #1f64c1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #ddd;
+        }
+
+        .login-btn {
+            background: linear-gradient(180deg, #1b5bb0, #14498f);
+            color: white;
+            border: 1px solid #103970;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(180deg, #1e65c2, #16529e);
+            transform: translateY(-1px);
+        }
+
+        .login-status {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #d1e3ff;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .admin-btn {
+            background: linear-gradient(180deg, #f39c12, #d68910);
+            color: white;
+            border: 1px solid #b9770e;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin: auto auto 0 auto;
+            display: block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-align: center;
+            width: fit-content;
+            transition: 0.2s;
         }
         
-        button:hover {
-            transform: translateY(-2px);
+        .admin-btn:hover {
+            background: linear-gradient(180deg, #f1c40f, #e67e22);
+            transform: translateY(-1px);
+        }
+
+        /* Right Panel - Chatbot */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            background: rgba(240, 245, 255, 0.95);
+            border: 1px solid #d0e1f9;
+            position: relative;
+        }
+
+        .chat-header {
+            background: #4285f4;
+            color: white;
+            padding: 8px 25px;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            clip-path: polygon(0 0, 95% 0, 100% 100%, 0% 100%);
+            width: fit-content;
+            padding-right: 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .chat-content {
+            padding: 45px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            padding: 5px 15px;
+            align-items: center;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .search-bar input {
+            border: none;
+            padding: 10px;
+            width: 100%;
+            outline: none;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .search-bar i {
+            color: #999;
+            cursor: pointer;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .subject-select {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 8px 15px;
+            flex: 1;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .subject-select select {
+            border: none;
+            outline: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a5bb0;
+            margin-left: 10px;
+            flex: 1;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .get-info-btn {
+            background: linear-gradient(180deg, #3498db, #2980b9);
+            color: white;
+            border: 1px solid #1f618d;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+
+        .get-info-btn:hover {
+            background: linear-gradient(180deg, #5dade2, #2471a3);
+            transform: translateY(-1px);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid #d0e1f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .info-card h4 {
+            color: #1a5bb0;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border-bottom: 2px solid #eef2f8;
+            padding-bottom: 5px;
+        }
+
+        .info-card p {
+            font-size: 14px;
+            color: #444;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            word-break: break-word;
+        }
+
+        .chart-area {
+            background: white;
+            border: 1px solid #d0e1f9;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-height: 250px;
+            position: relative;
         }
         
-        button:active {
-            transform: translateY(0);
+        .chart-area img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Bottom Tabs */
+        .bottom-tabs {
+            background: linear-gradient(to right, #1a5bb0, #2c82d8, #1a5bb0);
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            border-top: 2px solid #104184;
+            box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            padding: 12px 30px;
+            color: #1a5bb0;
+            background: #e8f0fe;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            border-right: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            transition: 0.2s;
+            margin: 0 5px;
+            clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
+            margin-top: 5px;
+        }
+
+        .tab.active {
+            background: #1a5bb0;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: white;
         }
         
-        .hidden {
+        .admin-controls {
+            margin-bottom: 15px;
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #f1c40f;
             display: none;
         }
         
-        .login-section, .chat-section {
-            animation: fadeIn 0.3s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .response {
-            background: #f5f5f5;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 8px;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            font-size: 0.95em;
-        }
-        
-        .error {
-            border-left-color: #e74c3c;
-            background: #fadbd8;
-            color: #c0392b;
-        }
-        
-        .success {
-            border-left-color: #27ae60;
-            background: #d5f4e6;
-            color: #1e8449;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .button-group button {
-            flex: 1;
-        }
-        
-        .button-group .logout-btn {
-            background: #e74c3c;
-        }
-        
-        .info-box {
-            background: #ecf0f1;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.95em;
-            color: #555;
-        }
-        
-        .badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-top: 10px;
-        }
-        
-        chart-image {
-            max-width: 100%;
-            margin-top: 15px;
-            border-radius: 8px;
+        .admin-controls select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Login Section -->
-        <div id="loginSection" class="login-section">
-            <h1>🎓 Student Attendance System</h1>
+
+    <div class="header">
+        <i class="fas fa-graduation-cap"></i> Student Attendance System
+    </div>
+
+    <div class="main-container">
+        <!-- Left Login Panel -->
+        <div class="login-panel">
+            <div class="login-header">Student/Admin Login</div>
             
-            <div class="form-group">
-                <label>Roll Number / Admin ID</label>
-                <input type="number" id="rollNo" placeholder="Enter roll number or 2005 for admin">
+            <div class="input-group">
+                <label><i class="fas fa-user"></i> Roll Number / Admin ID</label>
+                <div class="input-field">
+                    <div class="icon-container"><i class="fas fa-user"></i></div>
+                    <input type="number" id="rollNo" placeholder="Enter ID">
+                </div>
             </div>
             
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Enter password">
+            <div class="input-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <div class="input-field">
+                    <div class="icon-container"><i class="fas fa-lock"></i></div>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div>
             </div>
             
-            <button onclick="login()">Login</button>
+            <button class="login-btn" onclick="login()">Login</button>
             
-            <div id="loginResponse"></div>
+            <div class="login-status">
+                <div style="font-weight: bold; margin-bottom: 5px;">Login Status:</div>
+                <div id="loginResponse">Please login to access data.</div>
+            </div>
             
-            <div class="info-box" style="margin-top: 30px;">
-                <strong>Demo Credentials:</strong><br>
-                <strong>Admin:</strong> ID: 2005 | Password: Yashika<br>
-                <strong>Student:</strong> ID: Your Roll No | Password: YourName@2023 (e.g., John@2023)
+            <button class="admin-btn" onclick="toggleDemoInfo()">- Admin Access -</button>
+            <div id="demoInfo" style="display:none; font-size:11px; margin-top:10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius:5px;">
+                Admin: 2005 / Yashika<br>
+                Student: 20232001 / Student_1@2023
             </div>
         </div>
-        
-        <!-- Chat Section (Hidden by default) -->
-        <div id="chatSection" class="chat-section hidden">
-            <h1>Welcome! 👋</h1>
-            <p id="userGreeting" style="text-align: center; color: #667eea; font-weight: 600; margin-bottom: 20px;"></p>
+
+        <!-- Right Chatbot Panel -->
+        <div class="chat-panel" id="mainPanel" style="opacity: 0.7; pointer-events: none;">
+            <div class="chat-header">Attendance Chatbot</div>
             
-            <div id="adminControls" class="hidden">
-                <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-                <h3 style="margin-bottom: 15px; color: #555; text-align: center;">Admin Panel</h3>
-                <div class="form-group">
-                    <label>Select Student</label>
-                    <select id="adminStudentSelect">
-                        <option value="">Search all students (or select one)</option>
+            <div class="chat-content">
+                
+                <div class="admin-controls" id="adminControls">
+                    <strong>Admin View:</strong>
+                    <select id="adminStudentSelect" onchange="submitQuery()">
+                        <option value="">Select a student...</option>
                     </select>
                 </div>
-                <button onclick="viewAllStudents()" style="background: #34495e; margin-bottom: 20px;">View All Student Data</button>
-                <div id="studentTableContainer" class="hidden" style="margin-bottom: 20px; max-height: 300px; overflow-y: auto;">
-                    <table id="studentTable" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead>
-                            <tr style="background: #f1f1f1; text-align: left;">
-                                <th style="padding: 8px; border: 1px solid #ddd;">Roll No</th>
-                                <th style="padding: 8px; border: 1px solid #ddd;">Name</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentTableBody">
-                        </tbody>
-                    </table>
+
+                <div class="search-bar">
+                    <input type="text" id="query" placeholder="Ask a Question... (e.g. details, percentage, present dates)">
+                    <i class="fas fa-chevron-down" onclick="submitQuery()"></i>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Ask a Question</label>
-                <textarea id="query" placeholder="e.g., 'details', 'attendance percentage', 'present dates'" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>Select Subject</label>
-                <select id="subject">
-                    <option>All</option>
-                    <option>NLP</option>
-                    <option>IOT</option>
-                    <option>SE</option>
-                    <option>ML</option>
-                    <option>ELECTIVE</option>
-                    <option>OE</option>
-                </select>
-            </div>
-            
-            <button onclick="submitQuery()">Get Info</button>
-            
-            <div id="queryResponse"></div>
-            
-            <div class="button-group">
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                
+                <div class="controls-row">
+                    <div class="subject-select">
+                        Select Subject: 
+                        <select id="subject">
+                            <option value="All">All</option>
+                            <option value="NLP">NLP</option>
+                            <option value="IOT">IOT</option>
+                            <option value="SE" selected>SE</option>
+                            <option value="ML">ML</option>
+                            <option value="ELECTIVE">ELECTIVE</option>
+                            <option value="OE">OE</option>
+                        </select>
+                    </div>
+                    <button class="get-info-btn" onclick="submitQuery()">Get Info</button>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Student Details:</h4>
+                        <p id="studentDetailsOut"><i class="fas fa-info-circle" style="color: #3498db;"></i> No data</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Attendance Percentage:</h4>
+                        <p id="attendancePercentOut"><i class="fas fa-chart-bar" style="color: #f1c40f;"></i> No data</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Present Dates:</h4>
+                        <p id="presentDatesOut"><i class="fas fa-check-square" style="color: #2ecc71;"></i> No data</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Absent Dates:</h4>
+                        <p id="absentDatesOut"><i class="fas fa-times-circle" style="color: #e74c3c;"></i> No data</p>
+                    </div>
+                </div>
+                
+                <div class="chart-area" id="chartArea">
+                    <div style="color: #999; font-style: italic;">Chart will appear here</div>
+                </div>
             </div>
         </div>
     </div>
-    
+
+    <div class="bottom-tabs">
+        <button class="tab" onclick="alert('Student Data tab clicked')">Student Data</button>
+        <button class="tab active">Attendance Chatbot</button>
+        <button class="tab" onclick="logout()">Logout</button>
+    </div>
+
     <script>
         let currentUser = null;
         let isAdmin = false;
+        let currentUserName = "";
         
+        function toggleDemoInfo() {
+            const el = document.getElementById('demoInfo');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
         async function login() {
             const rollNo = parseInt(document.getElementById('rollNo').value);
             const password = document.getElementById('password').value;
+            const loginResp = document.getElementById('loginResponse');
             
             if (!rollNo || !password) {
-                showResponse('loginResponse', 'Please fill all fields', 'error');
+                loginResp.innerHTML = '<span style="color: #ffcccc;">Please fill all fields</span>';
                 return;
             }
+            
+            loginResp.innerHTML = 'Authenticating...';
             
             try {
                 const response = await fetch('/api/login', {
@@ -270,75 +543,29 @@
                 if (data.success) {
                     currentUser = rollNo;
                     isAdmin = data.type === 'admin';
+                    currentUserName = isAdmin ? "Admin" : data.name;
                     
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('chatSection').classList.remove('hidden');
-                    document.getElementById('userGreeting').textContent = 
-                        data.type === 'admin' ? 'Admin Panel' : `Welcome, ${data.name}!`;
+                    loginResp.innerHTML = `<span style="color: #a8f3c4;">Login Successful! Welcome, ${currentUserName}!</span>`;
+                    
+                    // Enable right panel
+                    const mainPanel = document.getElementById('mainPanel');
+                    mainPanel.style.opacity = '1';
+                    mainPanel.style.pointerEvents = 'auto';
 
                     if (isAdmin) {
-                        document.getElementById('adminControls').classList.remove('hidden');
+                        document.getElementById('adminControls').style.display = 'block';
                         loadStudentsForAdmin();
                     } else {
-                        document.getElementById('adminControls').classList.add('hidden');
-                        document.getElementById('studentTableContainer').classList.add('hidden');
+                        document.getElementById('adminControls').style.display = 'none';
                     }
+                    
+                    // Auto-fetch data on login
+                    submitQuery();
                 } else {
-                    showResponse('loginResponse', data.message, 'error');
+                    loginResp.innerHTML = `<span style="color: #ffcccc;">Login Failed: ${data.message}</span>`;
                 }
             } catch (error) {
-                showResponse('loginResponse', 'Login error: ' + error.message, 'error');
-            }
-        }
-        
-        async function submitQuery() {
-            const query = document.getElementById('query').value;
-            const subject = document.getElementById('subject').value;
-            let targetRoll = currentUser;
-            
-            if (isAdmin) {
-                const selectedRoll = document.getElementById('adminStudentSelect').value;
-                if (selectedRoll) {
-                    targetRoll = parseInt(selectedRoll);
-                }
-            }
-            
-            if (!query) {
-                showResponse('queryResponse', 'Please enter a question', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch('/api/query', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        query, 
-                        subject, 
-                        roll_no: targetRoll,
-                        is_admin: isAdmin 
-                    })
-                });
-                
-                const data = await response.json();
-                
-                let resultText = '';
-                if (data.details) resultText += `\n📋 Details:\n${data.details}\n`;
-                if (data.percentage) resultText += `\n📊 ${data.percentage}\n`;
-                if (data.present_dates) resultText += `\n${data.present_dates}\n`;
-                if (data.absent_dates) resultText += `\n${data.absent_dates}\n`;
-                if (data.present_count) resultText += `\nPresent: ${data.present_count} | Absent: ${data.absent_count}`;
-                
-                if (data.chart) {
-                    resultText += '\n\n📊 Chart generated';
-                    showResponse('queryResponse', resultText, 'success');
-                    document.getElementById('queryResponse').innerHTML += 
-                        `<img src="${data.chart}" style="max-width: 100%; margin-top: 15px; border-radius: 8px;">`;
-                } else {
-                    showResponse('queryResponse', resultText, 'success');
-                }
-            } catch (error) {
-                showResponse('queryResponse', 'Error: ' + error.message, 'error');
+                loginResp.innerHTML = `<span style="color: #ffcccc;">Login error: ${error.message}</span>`;
             }
         }
         
@@ -347,58 +574,139 @@
                 const res = await fetch('/api/students');
                 const students = await res.json();
                 const select = document.getElementById('adminStudentSelect');
-                const tbody = document.getElementById('studentTableBody');
-                select.innerHTML = '<option value="">Search all students (or select one)</option>';
-                tbody.innerHTML = '';
+                select.innerHTML = '<option value="">Select a student...</option>';
                 
                 students.forEach(s => {
                     const option = document.createElement('option');
                     option.value = s['roll no'];
-                    option.textContent = `${s['roll no']} - ${s.name}`;
+                    option.textContent = `${s['name']} (Roll: ${s['roll no']})`;
                     select.appendChild(option);
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td style="padding: 8px; border: 1px solid #ddd;">${s['roll no']}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${s.name}</td>
-                    `;
-                    tbody.appendChild(tr);
                 });
             } catch (error) {
                 console.error("Error loading students", error);
             }
         }
-        
-        function viewAllStudents() {
-            const container = document.getElementById('studentTableContainer');
-            container.classList.toggle('hidden');
-        }
 
+        async function submitQuery() {
+            if (!currentUser && !isAdmin) return;
+            
+            const query = document.getElementById('query').value || "details and attendance";
+            const subject = document.getElementById('subject').value;
+            let targetRoll = currentUser;
+            
+            if (isAdmin) {
+                const selectedRoll = document.getElementById('adminStudentSelect').value;
+                if (selectedRoll) {
+                    targetRoll = parseInt(selectedRoll);
+                } else {
+                    return; // Don't query if admin hasn't selected a student
+                }
+            }
+            
+            try {
+                // Determine implicit query if input is empty but we want full dashboard
+                let actualQuery = query;
+                if(actualQuery.trim() === "") {
+                    actualQuery = "detail percentage present absent";
+                }
+
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        query: actualQuery, 
+                        subject, 
+                        roll_no: targetRoll,
+                        is_admin: isAdmin 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Update UI based on response
+                
+                // Details
+                if (data.details && data.details !== "❌ Student not found") {
+                    // Extract name and roll from python dict string format
+                    try {
+                        const dictStr = data.details.replace(/'/g, '"');
+                        const detailsObj = JSON.parse(dictStr);
+                        document.getElementById('studentDetailsOut').innerHTML = 
+                            `Name: ${detailsObj.name}, Roll No: ${detailsObj['roll no']}`;
+                    } catch(e) {
+                        document.getElementById('studentDetailsOut').innerHTML = data.details;
+                    }
+                } else {
+                    document.getElementById('studentDetailsOut').innerHTML = "No details available.";
+                }
+                
+                // Percentage
+                if (data.percentage) {
+                    document.getElementById('attendancePercentOut').innerHTML = 
+                        `<i class="fas fa-chart-bar" style="color: #f1c40f; margin-right:5px;"></i> ${data.percentage.replace('📊 ', '')}`;
+                } else {
+                    document.getElementById('attendancePercentOut').innerHTML = "No data";
+                }
+                
+                // Present Dates
+                if (data.present_dates) {
+                    let dates = data.present_dates.replace('✅ Present Dates:\\n', '').replace('✅ Present Dates:\n', '');
+                    document.getElementById('presentDatesOut').innerHTML = 
+                        `<i class="fas fa-check-square" style="color: #2ecc71; margin-right:5px;"></i> ${dates}`;
+                } else {
+                    document.getElementById('presentDatesOut').innerHTML = "No data";
+                }
+                
+                // Absent Dates
+                if (data.absent_dates) {
+                    let dates = data.absent_dates.replace('❌ Absent Dates:\\n', '').replace('❌ Absent Dates:\n', '');
+                    document.getElementById('absentDatesOut').innerHTML = 
+                        `<i class="fas fa-times-circle" style="color: #e74c3c; margin-right:5px;"></i> ${dates}`;
+                } else {
+                    document.getElementById('absentDatesOut').innerHTML = "No data";
+                }
+                
+                // Chart
+                const chartArea = document.getElementById('chartArea');
+                if (data.chart) {
+                    chartArea.innerHTML = `<img src="${data.chart}" alt="Attendance Chart">`;
+                } else {
+                    chartArea.innerHTML = `<div style="color: #999; font-style: italic;">No chart data available for selected subject</div>`;
+                }
+                
+            } catch (error) {
+                console.error("Query error", error);
+            }
+        }
+        
         function logout() {
             currentUser = null;
             isAdmin = false;
-            document.getElementById('chatSection').classList.add('hidden');
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('loginResponse').innerHTML = '';
-            document.getElementById('queryResponse').innerHTML = '';
-            document.getElementById('query').value = '';
+            currentUserName = "";
+            document.getElementById('loginResponse').innerHTML = "Please login to access data.";
             document.getElementById('rollNo').value = '';
             document.getElementById('password').value = '';
+            
+            const mainPanel = document.getElementById('mainPanel');
+            mainPanel.style.opacity = '0.7';
+            mainPanel.style.pointerEvents = 'none';
+            
+            document.getElementById('studentDetailsOut').innerHTML = '<i class="fas fa-info-circle" style="color: #3498db;"></i> No data';
+            document.getElementById('attendancePercentOut').innerHTML = '<i class="fas fa-chart-bar" style="color: #f1c40f;"></i> No data';
+            document.getElementById('presentDatesOut').innerHTML = '<i class="fas fa-check-square" style="color: #2ecc71;"></i> No data';
+            document.getElementById('absentDatesOut').innerHTML = '<i class="fas fa-times-circle" style="color: #e74c3c;"></i> No data';
+            document.getElementById('chartArea').innerHTML = '<div style="color: #999; font-style: italic;">Chart will appear here</div>';
+            document.getElementById('adminControls').style.display = 'none';
+            document.getElementById('query').value = '';
         }
-        
-        function showResponse(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.className = `response ${type}`;
-            element.textContent = message;
-        }
-        
+
         // Allow Enter key
         document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                if (document.getElementById('loginSection').classList.contains('hidden')) {
-                    submitQuery();
-                } else {
+            if (e.key === 'Enter') {
+                if (!currentUser) {
                     login();
+                } else if(document.activeElement === document.getElementById('query')) {
+                    submitQuery();
                 }
             }
         });
