@@ -131,7 +131,7 @@ def login_api():
     password = data.get('password', '')
     
     # Admin login
-    if roll_no == 2005 and password == "Ritesh@2005":
+    if roll_no == 2005 and password == "Yashika":
         return jsonify({"success": True, "type": "admin", "message": "Admin Login Successful"})
     
     # Student login
@@ -175,6 +175,39 @@ def query_api():
             chart = generate_attendance_chart(student_roll, subject)
             if chart:
                 response['chart'] = chart
+        else:
+            all_percentages = []
+            total_p = 0
+            total_a = 0
+            for sub in subjects:
+                if sub != "All":
+                    perc_res, p, a = attendance_percentage(student_roll, sub)
+                    val = perc_res.split('= ')[-1] if '=' in perc_res else perc_res
+                    all_percentages.append(f"{sub}: {val}")
+                    total_p += p
+                    total_a += a
+            
+            if total_p + total_a > 0:
+                overall_percent = (total_p / (total_p + total_a)) * 100
+                response['percentage'] = f"📊 Overall Percentage = {round(overall_percent, 2)}%\n\nBreakdown:\n" + "\n".join(all_percentages)
+                response['present_count'] = total_p
+                response['absent_count'] = total_a
+                
+                labels = ['Present', 'Absent']
+                sizes = [total_p, total_a]
+                colors = ['#4CAF50', '#F44336']
+                fig, ax = plt.subplots()
+                ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors, startangle=90)
+                ax.axis('equal')
+                plt.title(f'Overall Attendance for Roll No: {student_roll}')
+                buf = BytesIO()
+                plt.savefig(buf, format='png')
+                buf.seek(0)
+                img_base64 = base64.b64encode(buf.read()).decode()
+                plt.close(fig)
+                response['chart'] = f"data:image/png;base64,{img_base64}"
+            else:
+                response['percentage'] = "No Data Available"
     
     if "present" in query_lower and subject != "All":
         present_dates, _, _, _ = get_attendance_dates(student_roll, subject, "present")
