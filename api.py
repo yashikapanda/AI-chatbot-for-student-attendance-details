@@ -172,6 +172,9 @@ def query_api():
             response['percentage'] = percentage_result
             response['present_count'] = p
             response['absent_count'] = a
+            chart = generate_attendance_chart(student_roll, subject)
+            if chart:
+                response['chart'] = chart
     
     if "present" in query_lower and subject != "All":
         present_dates, _, _, _ = get_attendance_dates(student_roll, subject, "present")

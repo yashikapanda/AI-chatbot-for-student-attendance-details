@@ -193,6 +193,30 @@
             <h1>Welcome! 👋</h1>
             <p id="userGreeting" style="text-align: center; color: #667eea; font-weight: 600; margin-bottom: 20px;"></p>
             
+            <div id="adminControls" class="hidden">
+                <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
+                <h3 style="margin-bottom: 15px; color: #555; text-align: center;">Admin Panel</h3>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="adminStudentSelect">
+                        <option value="">Search all students (or select one)</option>
+                    </select>
+                </div>
+                <button onclick="viewAllStudents()" style="background: #34495e; margin-bottom: 20px;">View All Student Data</button>
+                <div id="studentTableContainer" class="hidden" style="margin-bottom: 20px; max-height: 300px; overflow-y: auto;">
+                    <table id="studentTable" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <thead>
+                            <tr style="background: #f1f1f1; text-align: left;">
+                                <th style="padding: 8px; border: 1px solid #ddd;">Roll No</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label>Ask a Question</label>
                 <textarea id="query" placeholder="e.g., 'details', 'attendance percentage', 'present dates'" rows="3"></textarea>
@@ -251,6 +275,14 @@
                     document.getElementById('chatSection').classList.remove('hidden');
                     document.getElementById('userGreeting').textContent = 
                         data.type === 'admin' ? 'Admin Panel' : `Welcome, ${data.name}!`;
+
+                    if (isAdmin) {
+                        document.getElementById('adminControls').classList.remove('hidden');
+                        loadStudentsForAdmin();
+                    } else {
+                        document.getElementById('adminControls').classList.add('hidden');
+                        document.getElementById('studentTableContainer').classList.add('hidden');
+                    }
                 } else {
                     showResponse('loginResponse', data.message, 'error');
                 }
@@ -262,6 +294,14 @@
         async function submitQuery() {
             const query = document.getElementById('query').value;
             const subject = document.getElementById('subject').value;
+            let targetRoll = currentUser;
+            
+            if (isAdmin) {
+                const selectedRoll = document.getElementById('adminStudentSelect').value;
+                if (selectedRoll) {
+                    targetRoll = parseInt(selectedRoll);
+                }
+            }
             
             if (!query) {
                 showResponse('queryResponse', 'Please enter a question', 'error');
@@ -275,7 +315,7 @@
                     body: JSON.stringify({ 
                         query, 
                         subject, 
-                        roll_no: currentUser,
+                        roll_no: targetRoll,
                         is_admin: isAdmin 
                     })
                 });
@@ -302,6 +342,38 @@
             }
         }
         
+        async function loadStudentsForAdmin() {
+            try {
+                const res = await fetch('/api/students');
+                const students = await res.json();
+                const select = document.getElementById('adminStudentSelect');
+                const tbody = document.getElementById('studentTableBody');
+                select.innerHTML = '<option value="">Search all students (or select one)</option>';
+                tbody.innerHTML = '';
+                
+                students.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s['roll no'];
+                    option.textContent = `${s['roll no']} - ${s.name}`;
+                    select.appendChild(option);
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="padding: 8px; border: 1px solid #ddd;">${s['roll no']}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${s.name}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Error loading students", error);
+            }
+        }
+        
+        function viewAllStudents() {
+            const container = document.getElementById('studentTableContainer');
+            container.classList.toggle('hidden');
+        }
+
         function logout() {
             currentUser = null;
             isAdmin = false;
